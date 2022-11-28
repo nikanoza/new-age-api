@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: New Age
+  description: New Age Api
+  version: 0.1.9
+
+servers:
+  - url: https://
+    description: production server
+  - url: http://localhost:4000/api
+    description: local server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /auth/sign-up:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        description: crate new user
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                firstName:
+                  types: string
+                lastName:
+                  type: string
+                birthday:
+                  type: string
+                  format: date
+                email:
+                  type: string
+                password:
+                  type: string
+            example:
+              firstName: Albus
+              lastName: Dambldori
+              birthday: "1935-08-18"
+              email: albus@newage.io
+              password: "harry potter"
+      responses:
+        "201":
+          description: new user create successfully
+  /auth/sign-in:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        description: login
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+            example:
+              email: albus@newage.io
+              password: "harry potter"
+      responses:
+        "200":
+          description: user login successfully
+  /auth/me:
+    get:
+      tags:
+        - Auth
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: get user info
+  /users/{userId}:
+    put:
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: update user
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+      responses:
+        "200":
+          description: user updated successfully
+    delete:
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: user deleted successfully
